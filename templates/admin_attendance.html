@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <title>📊 Attendance Logs</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+        --bg: #e8f0fe;
+        --text: #202840;
+        --card: #ffffff;
+        --accent: #2978f0;
+        --header: #d0e3ff;
+        --btn: #1a56db;
+        --btn-hover: #134ab8;
+        --border: #b3c7ff;
+        --shadow: rgba(41, 120, 240, 0.15);
+        --btn-shadow: rgba(26, 86, 219, 0.4);
+      }
+      
+      [data-theme="dark"] {
+        --bg: #202840;
+        --text: #e8f0fe;
+        --card: #2b3a67;
+        --accent: #4a90ff;
+        --header: #394d8a;
+        --btn: #4a90ff;
+        --btn-hover: #3670d1;
+        --border: #2d54a3;
+        --shadow: rgba(74, 144, 255, 0.15);
+        --btn-shadow: rgba(74, 144, 255, 0.5);
+      }
+      
+      body {
+        font-family: 'Poppins', sans-serif;
+        margin: 0;
+        padding: 40px 20px;
+        background-color: var(--bg);
+        color: var(--text);
+        line-height: 1.6;
+        font-size: 16px;
+      }
+      
+      .container {
+        max-width: 1100px;
+        margin: auto;
+        background-color: var(--card);
+        padding: 40px 40px 50px;
+        border-radius: 20px;
+        box-shadow: 0 20px 40px var(--shadow);
+        transition: background-color 0.3s ease, color 0.3s ease;
+      }
+      
+      .brand-header {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px; /* space between logo and text */
+        font-size: 32px;
+        font-weight: 800;
+        color: var(--accent);
+        margin-bottom: 30px;
+        text-align: center;
+        letter-spacing: 1.2px;
+        border-bottom: 3px solid var(--border);
+        padding-bottom: 15px;
+      }
+      .brand-header img {
+        height: 40px;
+        width: auto;
+      }
+      
+      h2, h3 {
+        margin-bottom: 18px;
+        color: var(--accent);
+        font-weight: 700;
+      }
+      
+      form {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 16px;
+        margin-bottom: 30px;
+      }
+      
+      label {
+        font-weight: 600;
+        min-width: 120px;
+        font-size: 15px;
+      }
+      
+      input[type="date"] {
+        padding: 10px 14px;
+        border: 1.5px solid var(--border);
+        border-radius: 8px;
+        font-size: 15px;
+        background-color: var(--bg);
+        color: var(--text);
+        transition: border-color 0.3s ease;
+      }
+      
+      input[type="date"]:focus {
+        outline: none;
+        border-color: var(--btn);
+        box-shadow: 0 0 6px var(--btn);
+      }
+      
+      button, a.btn, .back-btn {
+        padding: 12px 24px;
+        background: linear-gradient(135deg, var(--btn), var(--btn-hover));
+        color: #fff;
+        text-decoration: none;
+        border: none;
+        border-radius: 12px;
+        cursor: pointer;
+        font-size: 15px;
+        font-weight: 700;
+        box-shadow: 0 4px 10px var(--btn-shadow);
+        transition: background 0.4s ease, box-shadow 0.3s ease;
+      }
+      
+      button:hover, a.btn:hover, .back-btn:hover {
+        background: linear-gradient(135deg, var(--btn-hover), var(--btn));
+        box-shadow: 0 6px 14px var(--btn-shadow);
+      }
+      
+      .back-btn {
+        background: #607d8b;
+        box-shadow: 0 4px 12px rgba(96, 125, 139, 0.6);
+        font-weight: 600;
+        display: inline-block;
+        margin-top: 25px;
+        transition: background-color 0.3s ease, box-shadow 0.3s ease;
+      }
+      
+      .back-btn:hover {
+        background-color: #455a64;
+        box-shadow: 0 6px 18px rgba(69, 90, 100, 0.7);
+      }
+      
+      .table-wrapper {
+        overflow-x: auto;
+        margin-bottom: 40px;
+        border-radius: 12px;
+        box-shadow: 0 8px 20px var(--shadow);
+      }
+      
+      table {
+        width: 100%;
+        border-spacing: 0;
+        border-collapse: collapse;
+        border-radius: 12px;
+        overflow: hidden;
+        background-color: var(--card);
+        font-size: 15px;
+      }
+      
+      thead {
+        background-color: var(--btn);
+        color: white;
+      }
+      
+      thead th {
+        text-align: left;
+        padding: 18px 24px;
+        font-weight: 700;
+        font-size: 16px;
+      }
+      
+      tbody tr {
+        transition: background-color 0.35s ease;
+      }
+      
+      tbody tr:nth-child(even) {
+        background-color: rgba(41, 120, 240, 0.06);
+      }
+      
+      tbody tr:hover {
+        background-color: rgba(41, 120, 240, 0.15);
+      }
+      
+      tbody td {
+        padding: 16px 24px;
+        font-size: 15px;
+        color: var(--text);
+      }
+      
+      p {
+        background: #fff3cd;
+        color: #856404;
+        padding: 14px 18px;
+        border: 1.5px solid #ffeeba;
+        border-radius: 10px;
+        font-size: 15px;
+        margin-bottom: 25px;
+        max-width: 700px;
+      }
+      
+      .theme-toggle {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background-color: var(--btn);
+        color: #fff;
+        padding: 12px 18px;
+        border-radius: 24px;
+        font-weight: 600;
+        font-size: 14px;
+        cursor: pointer;
+        box-shadow: 0 4px 12px var(--btn-shadow);
+        user-select: none;
+        transition: background-color 0.3s ease, box-shadow 0.3s ease;
+        z-index: 999;
+      }
+      
+      .theme-toggle:hover {
+        background-color: var(--btn-hover);
+        box-shadow: 0 6px 18px var(--btn-shadow);
+      }
+      
+      @media (max-width: 600px) {
+        form {
+          flex-direction: column;
+          align-items: stretch;
+        }
+      
+        label {
+          min-width: auto;
+          margin-bottom: 6px;
+        }
+      
+        thead {
+          display: none;
+        }
+      
+        table, tbody, tr, td {
+          display: block;
+          width: 100%;
+        }
+      
+        tbody tr {
+          margin-bottom: 20px;
+          border-bottom: 2px solid var(--border);
+        }
+      
+        td {
+          padding-left: 50%;
+          position: relative;
+        }
+      
+        td::before {
+          content: attr(data-label);
+          position: absolute;
+          left: 20px;
+          font-weight: 700;
+          color: #666;
+          white-space: nowrap;
+        }
+      }
+    </style>      
+</head>
+<body>
+  <div class="container">
+    <div class="brand-header">
+      <img src="{{ url_for('static', filename='KARE.png') }}" alt="KARE Logo">
+      KARE-FAS
+    </div>
+    <div class="theme-toggle" onclick="toggleTheme()">🌗 Toggle Theme</div>
+  
+
+    <h2>📊 All Attendance Records</h2>
+
+    <form method="POST">
+      <label for="date">📅 Filter by Date:</label>
+      <input type="date" id="date" name="date" value="{{ selected_date }}">
+      <button type="submit">Filter</button>
+      <a href="{{ url_for('export_csv') }}" class="btn">📥 Export CSV</a>
+    </form>
+
+    <h3>✅ Marked Attendance</h3>
+    {% if records %}
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>Register Number</th>
+            <th>Name</th>
+            <th>Time</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for row in records %}
+          <tr>
+            <td data-label="Register Number">{{ row['register_number'] }}</td>
+            <td data-label="Name">{{ row['name'] }}</td>
+            <td data-label="Time">{{ row['Time'] }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% else %}
+    <p>⚠️ No attendance records found for this date.</p>
+    {% endif %}
+
+    <h3>📈 Attendance Percentage Summary</h3>
+    {% if students %}
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>Register Number</th>
+            <th>Name</th>
+            <th>Room</th>
+            <th>Attendance %</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for student in students %}
+          <tr>
+            <td data-label="Register Number">{{ student['register_number'] }}</td>
+            <td data-label="Name">{{ student['name'] }}</td>
+            <td data-label="Room">{{ student['room'] }}</td>
+            <td data-label="Attendance %">{{ student['attendance_percentage'] }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% else %}
+    <p>⚠️ No student data available.</p>
+    {% endif %}
+
+    <a href="{{ url_for('admin_dashboard') }}" class="back-btn">← Back to Dashboard</a>
+  </div>
+
+  <script>
+    function toggleTheme() {
+      const html = document.documentElement;
+      const current = html.getAttribute("data-theme");
+      html.setAttribute("data-theme", current === "dark" ? "light" : "dark");
+    }
+  </script>
+</body>
+</html>

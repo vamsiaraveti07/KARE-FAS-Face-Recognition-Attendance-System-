@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <title>Add Student</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='add_student.css') }}">
+</head>
+<body>
+  <div class="branding"> <img src="{{ url_for('static', filename='KARE.png') }}" style="height: 30px; width: auto;">KARE-FAS</div>
+  <button class="theme-toggle" onclick="toggleTheme()">🌓</button>
+
+  <div class="form-container">
+    <h2> <img src="{{ url_for('static', filename='KARE.png') }}" style="height: 20px; width: auto;">Register New Student</h2>
+
+    {% if message %}
+      <div class="message">{{ message }}</div>
+    {% endif %}
+
+    <form method="POST" onsubmit="return validateForm()">
+      <input type="text" name="name" id="name" placeholder="Name">
+      <div class="error-message" id="nameError"></div>
+
+      <input type="text" name="register_number" id="register_number" placeholder="Register Number">
+      <div class="error-message" id="regError"></div>
+
+      <input type="text" name="room" id="room" placeholder="Room">
+      <div class="error-message" id="roomError"></div>
+
+      <button type="submit">Submit</button>
+    </form>
+
+    <a href="{{ url_for('admin_dashboard') }}" class="back-btn">← Back to Dashboard</a>
+  </div>
+
+  <script>
+    function toggleTheme() {
+      const html = document.documentElement;
+      html.setAttribute("data-theme", html.getAttribute("data-theme") === "light" ? "dark" : "light");
+    }
+
+    function validateForm() {
+      let valid = true;
+
+      const name = document.getElementById("name").value.trim();
+      const reg = document.getElementById("register_number").value.trim();
+      const room = document.getElementById("room").value.trim();
+
+      document.getElementById("nameError").textContent = name ? "" : "Name is required.";
+      document.getElementById("regError").textContent = reg ? "" : "Register Number is required.";
+      document.getElementById("roomError").textContent = room ? "" : "Room is required.";
+
+      if (!name || !reg || !room) valid = false;
+
+      return valid;
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <title>View Students</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='students.css') }}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #fef6fb;
+      --text: #1f1f2e;
+      --card: #fff0f5;
+      --accent: #9c27b0;
+      --low: #e57373;
+      --med: #fbc02d;
+      --high: #66bb6a;
+      --border: #ce93d8;
+    }
+
+    [data-theme="dark"] {
+      --bg: #1a1a2e;
+      --text: #f3f4f6;
+      --card: #2d2d44;
+      --accent: #ff69b4;
+      --low: #ef5350;
+      --med: #ffca28;
+      --high: #26a69a;
+      --border: #7b1fa2;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      background-color: var(--bg);
+      color: var(--text);
+      padding: 20px;
+    }
+
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
+
+    .top-bar h2 {
+      font-size: 26px;
+      font-weight: 700;
+      color: var(--accent);
+    }
+
+    .actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 10px;
+    }
+
+    input[type="text"] {
+      padding: 10px 14px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 14px;
+      background: var(--card);
+      color: var(--text);
+    }
+
+    button {
+      padding: 10px 18px;
+      background-color: var(--accent);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: background 0.3s;
+    }
+
+    button:hover {
+      background-color: #7b1fa2;
+    }
+
+    .back-btn {
+      display: inline-block;
+      margin-bottom: 20px;
+      text-decoration: none;
+      font-weight: 500;
+      color: var(--accent);
+    }
+
+    .card-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 24px;
+    }
+
+    .card {
+      background-color: var(--card);
+      border-radius: 16px;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.1);
+      padding: 24px;
+      transition: transform 0.3s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+    }
+
+    .card-content h3 {
+      font-size: 20px;
+      margin-bottom: 12px;
+      color: var(--accent);
+    }
+
+    .card-content p {
+      margin: 8px 0;
+      font-size: 15px;
+    }
+
+    .card-1 {
+      margin-top: 14px;
+    }
+
+    .low-attendance {
+      border-left: 6px solid var(--low);
+      padding-left: 10px;
+    }
+
+    .medium-attendance {
+      border-left: 6px solid var(--med);
+      padding-left: 10px;
+    }
+
+    .high-attendance {
+      border-left: 6px solid var(--high);
+      padding-left: 10px;
+    }
+
+    .legend {
+      font-size: 13px;
+      margin-top: 10px;
+      color: #888;
+    }
+
+    .delete-btn {
+      margin-top: 10px;
+      background-color: var(--low);
+      color: white;
+    }
+
+    .no-data {
+      text-align: center;
+      margin-top: 40px;
+      font-weight: 500;
+      color: #999;
+    }
+
+    @media (max-width: 500px) {
+      .top-bar {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .actions {
+        width: 100%;
+        justify-content: flex-start;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="top-bar">
+    <h2>📋 Registered Students</h2>
+    <div class="actions">
+      <input type="text" id="searchInput" placeholder="Search Room No..." onkeyup="filterCards()">
+      <button onclick="exportTableToCSV()">📁 Export CSV</button>
+      <button onclick="toggleDarkMode()">🌗 Theme</button>
+    </div>
+  </div>
+
+  <a href="{{ url_for('admin_dashboard') }}" class="back-btn">← Back to Dashboard</a>
+
+  <div class="card-container" id="studentCards">
+    {% for student in students %}
+    <div class="card">
+      <div class="card-content">
+        <h3>{{ student.name }}</h3>
+        <p><strong>Register No:</strong> {{ student.register_number }}</p>
+        <p><strong>Room No:</strong> {{ student.room }}</p>
+        <p><strong>Attendance:</strong> {{ student.attendance_percentage }}%</p>
+        <p><strong>Registered:</strong> {{ student.registered_on or 'N/A' }}</p>
+      </div>
+      <div class="card-1 {% if student.attendance_percentage|float < 75 %}low-attendance{% elif student.attendance_percentage|float >= 90 %}high-attendance{% else %}medium-attendance{% endif %}">
+        <div class="legend">
+          <span style="border-left: 6px solid var(--high); padding-left: 10px;">High ≥ 90%</span> |
+          <span style="border-left: 6px solid var(--med); padding-left: 10px;">Medium 75-89%</span> |
+          <span style="border-left: 6px solid var(--low); padding-left: 10px;">Low &lt; 75%</span>
+        </div>
+
+        <form action="{{ url_for('delete_student') }}" method="POST" onsubmit="return confirm('Delete this student?');">
+          <input type="hidden" name="register_number" value="{{ student.register_number }}">
+          <button class="delete-btn" type="submit"><i class="fa fa-trash"></i> Delete</button>
+        </form>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+
+  {% if not students %}
+    <p class="no-data">No students registered yet.</p>
+  {% endif %}
+
+  <script>
+    function filterCards() {
+      const input = document.getElementById("searchInput").value.toUpperCase();
+      const cards = document.querySelectorAll(".card");
+      cards.forEach(card => {
+        const roomText = card.querySelector("p:nth-of-type(2)").textContent.toUpperCase();
+        card.style.display = roomText.includes(input) ? "" : "none";
+      });
+    }
+
+    function toggleDarkMode() {
+      const html = document.documentElement;
+      const current = html.getAttribute("data-theme");
+      html.setAttribute("data-theme", current === "dark" ? "light" : "dark");
+    }
+
+    function exportTableToCSV() {
+      let csv = 'Name,Register No,Room No,Attendance %,Registered On\n';
+      {% for student in students %}
+        csv += '{{ student.name }},{{ student.register_number }},{{ student.room }},{{ student.attendance_percentage }}%,{{ student.registered_on or "N/A" }}\n';
+      {% endfor %}
+      const blob = new Blob([csv], { type: 'text/csv' });
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.download = "students.csv";
+      link.click();
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <title>Admin Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+  <link rel="icon" href="favicon.png" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='admin.css') }}" />
+</head>
+<body>
+  <div class="dashboard-header">
+    <button onclick="toggleSidebar()">☰</button>
+
+    <div class="logo" style="display: flex; align-items: center; gap: 8px;">
+      <img src="{{ url_for('static', filename='KARE.png') }}" style="height: 40px; width: auto;">
+      
+      <div style="display: flex; flex-direction: column; line-height: 1.2;">
+        <div>
+          <span style="color: var(--primary, #2b6cb0); font-weight: 700; font-size: 20px;">KARE</span> -
+          <span style="color: var(--accent, #9c27b0); font-weight: 700; font-size: 20px;">FAS</span>
+        </div>
+        <div style="font-size: 14px; color: #555;">Kalasalingam University</div>
+      </div>
+    </div>
+    
+    
+    <div class="header-right" style="display: flex; align-items: center; gap: 15px;">
+      <button onclick="toggleTheme()">🌙</button>
+      <span>🔔</span>
+      <span>👤 Admin</span>
+    </div>
+  </div>
+  
+
+  <div class="container">
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <h2>KARE-FAS</h2>
+        <p class="role">Admin</p>
+      </div>
+      <ul class="nav">
+        <li><a href="{{ url_for('add_student') }}" data-icon="➕" title="Register Student">Register Student</a></li>
+        <li><a href="{{ url_for('create_credentials') }}" data-icon="🔐" title="Create Credentials">Create Credentials</a></li>
+        <li><a href="{{ url_for('view_students') }}" data-icon="👥" title="View Students">View Students</a></li>
+        <li><a href="{{ url_for('admin_attendance') }}" data-icon="📊" title="View Attendance">View Attendance</a></li>
+        <li><a href="{{ url_for('profile') }}" data-icon="👤" title="Profile">Profile</a></li>
+        <li><a href="{{ url_for('logout') }}" data-icon="🚪" title="Logout">Logout</a></li>
+      </ul>
+    </aside>
+
+    <main class="main-content">
+      <h1>📋 Dashboard Overview - Admin</h1>
+      <div class="cards">
+        <div class="card">
+          <h3>📸 Take Attendance</h3>
+          <p>Manage facial recognition and attendance.</p>
+          <a href="{{ url_for('take_attendance') }}" class="btn">Take Attendance</a>
+        </div>
+        <div class="card">
+          <h3>📄 Register New Student</h3>
+          <p>Add facial data and details.</p>
+          <a href="{{ url_for('add_student') }}">Go →</a>
+        </div>
+        <div class="card">
+          <h3>🔐 Create Credentials</h3>
+          <p>Setup login access for students.</p>
+          <a href="{{ url_for('create_credentials') }}">Go →</a>
+        </div>
+        <div class="card">
+          <h3>👥 View Students</h3>
+          <p>Browse registered students.</p>
+          <a href="{{ url_for('view_students') }}">Go →</a>
+        </div>
+        <div class="card">
+          <h3>📊 Attendance Logs</h3>
+          <p>View, filter, and export attendance records.</p>
+          <a href="{{ url_for('admin_attendance') }}">View Attendance</a>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    function toggleSidebar() {
+      document.getElementById("sidebar").classList.toggle("collapsed");
+    }
+
+    function toggleTheme() {
+      const html = document.documentElement;
+      html.setAttribute("data-theme", html.getAttribute("data-theme") === "light" ? "dark" : "light");
+    }
+  </script>
+</body>
+</html>
