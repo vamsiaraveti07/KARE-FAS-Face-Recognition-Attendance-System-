@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Profile - {{ user }}</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap"
+    rel="stylesheet"
+  />
+  <style>
+    /* Reset and base */
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: "Poppins", sans-serif;
+      background: linear-gradient(to right, #f1f5f9, #e2e8f0);
+      color: #2d3748;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      padding-top: 60px; /* For fixed header */
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    /* --- Style 2: Fixed Top Bar --- */
+    header.fixed-top {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      background: #2b6cb0;
+      color: white;
+      text-align: center;
+      font-weight: 700;
+      font-size: 18px;
+      padding: 12px 0;
+      letter-spacing: 1.5px;
+      z-index: 1000;
+      user-select: none;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+    }
+
+    /* --- Style 4: Logo + Text side by side --- */
+    header.branding {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 24px;
+      color: #2b6cb0;
+      margin: 20px 0 40px 0;
+      user-select: none;
+    }
+
+    header.branding .logo {
+      font-size: 36px;
+      line-height: 1;
+    }
+
+    /* Profile container relative for watermark */
+    .profile-container {
+      position: relative;
+      width: 100%;
+      max-width: 420px;
+      padding: 20px;
+    }
+
+    /* --- Style 3: Watermark behind profile card --- */
+    .profile-container::before {
+      content: "KARE Face Recognition Attendance System";
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 40px;
+      color: rgba(43, 108, 176, 0.1);
+      white-space: nowrap;
+      pointer-events: none;
+      user-select: none;
+      z-index: 0;
+      font-weight: 700;
+    }
+
+    /* Profile card styling */
+    .profile-card {
+      background-color: #ffffff;
+      border-radius: 14px;
+      padding: 40px 30px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+      text-align: center;
+      position: relative;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      z-index: 1; /* above watermark */
+    }
+
+    .profile-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.12);
+    }
+
+    .profile-emoji {
+      font-size: 60px;
+      margin-bottom: 15px;
+    }
+
+    .subline {
+      font-size: 14px;
+      color: #718096;
+      margin-top: 5px;
+      margin-bottom: 25px;
+    }
+
+    /* Buttons */
+    .btn {
+      text-decoration: none;
+      background: linear-gradient(135deg, #2b6cb0, #2c5282);
+      color: #fff;
+      padding: 12px 24px;
+      border-radius: 8px;
+      transition: background 0.4s ease, transform 0.2s ease;
+      font-weight: 600;
+      box-shadow: 0 4px 12px rgba(43, 108, 176, 0.4);
+      display: inline-block;
+      min-width: 140px;
+      text-align: center;
+    }
+
+    .btn:hover {
+      background: linear-gradient(135deg, #2c5282, #2b6cb0);
+      transform: scale(1.05);
+      box-shadow: 0 6px 18px rgba(43, 108, 176, 0.5);
+    }
+
+    .logout {
+      background: linear-gradient(135deg, #e53e3e, #c53030);
+      box-shadow: 0 4px 12px rgba(229, 62, 62, 0.4);
+    }
+
+    .logout:hover {
+      background: linear-gradient(135deg, #c53030, #e53e3e);
+      box-shadow: 0 6px 18px rgba(197, 48, 48, 0.5);
+    }
+
+    .profile-actions {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    /* Responsive */
+    @media (max-width: 500px) {
+      .profile-card {
+        padding: 30px 20px;
+      }
+
+      .btn {
+        width: 100%;
+        min-width: auto;
+      }
+
+      header.branding {
+        font-size: 20px;
+        gap: 8px;
+      }
+
+      header.branding .logo {
+        font-size: 28px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Style 2: Fixed Top Bar -->
+  <header class="fixed-top">KARE Face Recognition Attendance System</header>
+
+  <!-- Style 4: Logo + Text side by side -->
+  <header class="branding">
+    <img src="kalasalingam__1_-removebg-preview.png" alt="KARE Face Recognition Attendance System Logo" width="250" />
+
+    <div class="title">KARE Face Recognition Attendance System</div>
+  </header>
+
+  <div class="profile-container">
+    <div class="profile-card">
+      <div class="profile-emoji">👤</div>
+      <h2>Hello, {{ user }}</h2>
+      <div class="subline">Welcome back to your dashboard</div>
+      <p><strong>Role:</strong> {{ role | capitalize }}</p>
+
+      <div class="profile-actions">
+        <a
+          href="{{ url_for('admin_dashboard') if role == 'admin' else url_for('student_dashboard') }}"
+          class="btn"
+          >Go to Dashboard</a
+        >
+        <a href="{{ url_for('logout') }}" class="btn logout">Logout</a>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

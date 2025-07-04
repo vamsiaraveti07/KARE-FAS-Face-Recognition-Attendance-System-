@@ -1,0 +1,133 @@
+body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #1e1e2f, #111827);
+    color: #f3f4f6;
+    min-height: 100vh;
+  }
+  
+  /* Layout */
+  .container {
+    display: flex;
+    height: 100vh;
+  }
+  
+  .sidebar {
+    width: 220px;
+    background: linear-gradient(135deg, #0f172a, #1e293b);
+    color: #e5e7eb;
+    padding: 25px 20px;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+  }
+  
+  .sidebar-header h2 {
+    margin: 0;
+    font-size: 20px;
+  }
+  
+  .sidebar-header .role {
+    font-size: 14px;
+    color: #9ca3af;
+    margin-top: 4px;
+  }
+  
+  .nav {
+    list-style: none;
+    padding: 0;
+    margin-top: 30px;
+  }
+  
+  .nav li {
+    margin-bottom: 15px;
+  }
+  
+  .nav a {
+    color: #e5e7eb;
+    text-decoration: none;
+    display: block;
+    padding: 10px 12px;
+    border-radius: 6px;
+    transition: 0.3s ease;
+  }
+  
+  .nav a:hover {
+    background-color: #334155;
+  }
+  
+  .main-content {
+    flex-grow: 1;
+    padding: 40px;
+    margin-left: 220px;
+  }
+  
+  /* Profile Section */
+  .profile-card {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 30px;
+    background: #1f2937;
+    border-radius: 12px;
+    padding: 30px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+    max-width: 600px;
+  }
+  
+  .photo-section {
+    flex: 1;
+    text-align: center;
+  }
+  
+  .photo-section img {
+    width: 140px;
+    height: 140px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #3b82f6;
+    margin-bottom: 15px;
+  }
+  
+  .photo-section input[type="file"] {
+    display: block;
+    margin: 0 auto;
+    color: #f3f4f6;
+  }
+  
+  .info-section {
+    flex: 2;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  .info-section label {
+    font-weight: 500;
+    font-size: 15px;
+    color: #cbd5e1;
+  }
+  
+  .info-section input[type="text"] {
+    padding: 10px;
+    border-radius: 6px;
+    border: 1px solid #334155;
+    background: #0f172a;
+    color: #e5e7eb;
+    font-size: 14px;
+  }
+  
+  button {
+    padding: 10px 20px;
+    background: linear-gradient(to right, #3b82f6, #6366f1);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+  
+  button:hover {
+    background: linear-gradient(to right, #2563eb, #4f46e5);
+  }
+  

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login & Signup - Face Attendance</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+<div class="container">
+    <div class="form-container login">
+        <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle light/dark theme">🌓</button>
+
+        <img src="{{ url_for('static', filename='KARE.png') }}" alt="KARE Logo" class="logo">
+        <h2>KARE - Attendance</h2>
+        <p>Login to your account</p>
+        <form method="POST" action="/login">
+            <input type="text" name="username" placeholder="Username" required>
+            <input type="password" name="password" placeholder="Password" required>
+            <select name="role" required>
+                <option value="" disabled selected>Select Role</option>
+                <option value="student">Student</option>
+                <option value="admin">Admin</option>
+            </select>
+            <button type="submit">Login</button>
+        </form>
+        {% if error %}
+            <p class="error">{{ error }}</p>
+        {% endif %}
+    </div>
+    
+</div>
+<script>
+    function toggleTheme() {
+      document.body.classList.toggle('dark');
+      // Save preference to localStorage (optional)
+      if(document.body.classList.contains('dark')){
+        localStorage.setItem('theme', 'dark');
+      } else {
+        localStorage.setItem('theme', 'light');
+      }
+    }
+  
+    // Load saved theme on page load
+    window.onload = () => {
+      if(localStorage.getItem('theme') === 'dark'){
+        document.body.classList.add('dark');
+      }
+    }
+  </script>
+  
+</body>
+</html>
