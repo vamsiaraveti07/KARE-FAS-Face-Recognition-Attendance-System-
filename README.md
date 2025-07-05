@@ -55,3 +55,13 @@ Stores student details
 ### attendance.csv
 stores students daily attendance 
 
+## 📸 Face Registration & Attendance
+Uses face_register.py to capture student face data and encode it using face_recognition.
+face_attendance.py matches live webcam input with stored encodings to log attendance.
+
+#👨‍💻 Author
+##Vamsi Araveti
+
+💼 Final year B.Tech Student
+
+💡 Built this project to showcase skills in computer vision, Python, Flask, and real-world software deployment.
