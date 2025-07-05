@@ -50,4 +50,8 @@ This system uses a webcam to capture and recognize student faces and log attenda
 
 ### `users.csv`
 Stores login credentials.
+### 'Student.csv'
+Stores student details
+### 'attendance.csv'
+stores students daily attendance 
 
