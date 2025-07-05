@@ -6,6 +6,8 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='student_dashboard.css') }}">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
   <style>
     body {
       font-family: 'Poppins', sans-serif;
@@ -217,15 +219,8 @@
       }
     }
   </style>
-  
-  
-  
-  
-</head>
-<body>
 
   <h2> <img src="{{ url_for('static', filename='KARE.png') }}" style="height: 50px; width: auto;"><span style="color:#1e3a8a;">KARE</span><span style="color:rgb(255, 54, 108) "> FAS</span>- {{ user }} </h2>
-
 
   {% if alert %}
     <div class="alert">⚠️ Your attendance is below 75%! Please be careful.</div>
@@ -245,7 +240,6 @@
       <p>{{ percentage }}%</p>
     </div>
   </div>
-  
 
   <div class="controls">
     <div>
@@ -264,7 +258,6 @@
     <span><span class="present-color"></span> Present</span>
     <span><span class="absent-color"></span> Absent</span>
   </div>
-  
 
   <table id="attendanceTable">
     <thead>
@@ -285,6 +278,8 @@
 
   <h3>📅 Attendance Calendar</h3>
   <div class="calendar" id="calendarContainer"></div>
+
+  {% include 'footer.html' %}
 
   <script>
     const presentDates = {{ calendar_data | safe }};

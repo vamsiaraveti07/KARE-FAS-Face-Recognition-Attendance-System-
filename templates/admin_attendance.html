@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <title>📊 Attendance Logs</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='logo.css') }}">
   <style>
     :root {
         --bg: #e8f0fe;
@@ -334,7 +335,7 @@
 
     <a href="{{ url_for('admin_dashboard') }}" class="back-btn">← Back to Dashboard</a>
   </div>
-
+  {% include 'footer.html' %}
   <script>
     function toggleTheme() {
       const html = document.documentElement;

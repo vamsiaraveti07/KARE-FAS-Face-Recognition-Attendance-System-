@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <title>Login & Signup - Face Attendance</title>
     <link rel="stylesheet" href="/static/style.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='logo.css') }}">
+
 </head>
 <body>
 <div class="container">
@@ -11,7 +13,7 @@
         <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle light/dark theme">🌓</button>
 
         <img src="{{ url_for('static', filename='KARE.png') }}" alt="KARE Logo" class="logo">
-        <h2>KARE - Attendance</h2>
+        <h2>KARE - ATTENDANCE</h2>
         <p>Login to your account</p>
         <form method="POST" action="/login">
             <input type="text" name="username" placeholder="Username" required>

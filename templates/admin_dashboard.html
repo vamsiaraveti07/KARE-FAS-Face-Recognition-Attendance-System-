@@ -6,6 +6,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
   <link rel="icon" href="favicon.png" />
   <link rel="stylesheet" href="{{ url_for('static', filename='admin.css') }}" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='logo.css') }}">
 </head>
 <body>
   <div class="dashboard-header">
@@ -19,7 +20,7 @@
           <span style="color: var(--primary, #2b6cb0); font-weight: 700; font-size: 20px;">KARE</span> -
           <span style="color: var(--accent, #9c27b0); font-weight: 700; font-size: 20px;">FAS</span>
         </div>
-        <div style="font-size: 14px; color: #555;">Kalasalingam University</div>
+        <div style="font-size: 14px; color: #555; font-style:italic;"><strong>Kalasalingam University</strong></div>
       </div>
     </div>
     
@@ -77,8 +78,13 @@
           <a href="{{ url_for('admin_attendance') }}">View Attendance</a>
         </div>
       </div>
-    </main>
+        </main>
   </div>
+ {% include 'footer.html' %}
+
+
+  
+  
 
   <script>
     function toggleSidebar() {

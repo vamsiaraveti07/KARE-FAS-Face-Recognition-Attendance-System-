@@ -12,6 +12,7 @@ from werkzeug.security import generate_password_hash
 
 
 
+
 app = Flask(__name__)
 app.secret_key = 'super_secret_key'
 USER_FILE = 'users.csv'
@@ -73,59 +74,81 @@ def admin_dashboard():
 # ---------------- REGISTER STUDENT ----------------
 @app.route('/add_student', methods=['GET', 'POST'])
 def add_student():
-    if 'username' not in session or session['role'] != 'admin':
+    if 'username' not in session or session.get('role') != 'admin':
         return redirect(url_for('login'))
 
     message = None
 
     if request.method == 'POST':
         try:
-            name = request.form['name']
-            register_number = request.form['register_number']
-            room = request.form['room']
+            name = request.form['name'].strip()
+            register_number = request.form['register_number'].strip()
+            room = request.form['room'].strip()
         except KeyError as e:
             return f"❌ Missing field: {e.args[0]}. Check your HTML input `name=` attributes.", 400
 
-        date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        if not name or not register_number or not room:
+            message = "❌ All fields are required."
+            return render_template('add_student.html', message=message)
 
         file_path = 'students.csv'
+        date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         exists = False
 
+        # Check if the student already exists
         if os.path.exists(file_path):
             with open(file_path, newline='') as f:
                 reader = csv.DictReader(f)
                 for row in reader:
-                    if row['register_number'] == register_number:
+                    if row.get('register_number') == register_number:
                         exists = True
                         break
 
         if exists:
             message = "⚠️ Student already registered."
         else:
-            with open(file_path, 'a', newline='') as f:
-                fieldnames = ['name', 'register_number', 'room', 'registered_on']
-                writer = csv.DictWriter(f, fieldnames=fieldnames)
-                if os.stat(file_path).st_size == 0:
-                    writer.writeheader()
-                writer.writerow({
-                    'name': name,
-                    'register_number': register_number,
-                    'room': room,
-                    'registered_on': date
-                })
+            # Debug log: where we are writing to
+            print("📄 Saving student to CSV:", name, register_number, room)
+            print("📍 Path:", os.path.abspath(file_path))
 
-            # Launch face capture in terminal
+            file_is_new = not os.path.exists(file_path) or os.stat(file_path).st_size == 0
+
             try:
-                subprocess.Popen(f'start cmd /k python register.py "{register_number}" "{name}"', shell=True)
+                with open(file_path, 'a', newline='') as f:
+                    fieldnames = ['name', 'register_number', 'room', 'registered_on']
+                    writer = csv.DictWriter(f, fieldnames=fieldnames)
 
-                message = f"✅ {name} registered successfully! Face capture launched in terminal."
+                    if file_is_new:
+                        print("🧾 File is new or empty — writing header.")
+                        writer.writeheader()
+
+                    writer.writerow({
+                        'name': name,
+                        'register_number': register_number,
+                        'room': room,
+                        'registered_on': date
+                    })
+
+                print("✅ Student saved to CSV successfully")
+
+                # Launch face registration subprocess
+                try:
+                    subprocess.Popen(
+                        ['start', 'cmd', '/k', 'python', 'register.py', register_number, name],
+                        shell=True
+                    )
+                    message = f"✅ {name} registered successfully! Face capture launched in terminal."
+                except Exception as e:
+                    print("❌ Subprocess error:", e)
+                    message = f"❌ Student saved, but face capture failed: {e}"
+
             except Exception as e:
-                message = f"❌ Student saved, but face capture failed: {e}"
+                print("❌ Error writing to students.csv:", e)
+                message = f"❌ Failed to save student: {e}"
 
         return render_template('add_student.html', message=message)
 
     return render_template('add_student.html')
-
 # ---------------- VIEW STUDENTS ----------------
 @app.route('/student_profile')
 def student_profile():
@@ -218,9 +241,6 @@ def create_credentials():
             message = f"✅ Credentials created for {username}"
 
     return render_template('create_credentials.html', message=message)
-
-
-
 @app.route('/view_students')
 def view_students():
     if 'username' not in session or session['role'] != 'admin':
@@ -232,32 +252,37 @@ def view_students():
     attendance_count = defaultdict(int)
     total_days = set()
 
-    # Count attendance
+    # Count attendance per student per day
     if os.path.exists(attendance_file):
         with open(attendance_file, newline='') as f:
             reader = csv.DictReader(f)
             for row in reader:
-                date_only = row['Time'].split()[0]
-                reg_no = row['register_number']
-                attendance_count[reg_no] += 1
-                total_days.add(date_only)
+                reg_no = row.get('register_number')
+                date_only = row['Time'].split()[0]  # Extract only date part
+                if reg_no and date_only:
+                    # Use (reg_no, date_only) tuple to count unique daily entries
+                    attendance_count[(reg_no, date_only)] = 1
+                    total_days.add(date_only)
+
+    # Re-aggregate count per student
+    student_attendance = defaultdict(int)
+    for (reg_no, _), value in attendance_count.items():
+        student_attendance[reg_no] += value
 
     total_working_days = len(total_days)
 
-    # Read students and add attendance percentage
+    # Read students and compute % attendance
     if os.path.exists(student_file):
         with open(student_file, newline='') as f:
             reader = csv.DictReader(f)
             for row in reader:
-                reg_no = row['register_number']
-                count = attendance_count.get(reg_no, 0)
+                reg_no = row.get('register_number')
+                count = student_attendance.get(reg_no, 0)
                 percentage = round((count / total_working_days) * 100, 2) if total_working_days else 0
-                row['attendance_percentage'] = f"{percentage}%"
+                row['attendance_percentage'] = percentage
                 students.append(row)
 
     return render_template('view_students.html', students=students)
-
-
 
 @app.route('/profile')
 def profile():
@@ -363,7 +388,6 @@ def view_all_attendance():
     return render_template('view_all_attendance.html', records=records)
                 
 
-
 @app.route('/admin_attendance', methods=['GET', 'POST'])
 def admin_attendance():
     attendance_file = 'attendance.csv'
@@ -373,19 +397,24 @@ def admin_attendance():
     total_days_set = set()
     attendance_count = defaultdict(int)
 
-    # Date filter
+    # Date filter (if form is submitted)
     if request.method == 'POST':
         raw_date = request.form.get('date')
         try:
             selected_date = datetime.strptime(raw_date, '%Y-%m-%d').strftime('%Y-%m-%d')
-        except:
+        except Exception as e:
+            print("⚠️ Invalid date format:", e)
             selected_date = ''
 
-    # Read attendance.csv
+    # Read attendance.csv safely
     if os.path.exists(attendance_file):
         with open(attendance_file, newline='') as f:
             reader = csv.DictReader(f)
             for row in reader:
+                if not row or 'register_number' not in row or 'Time' not in row:
+                    print("⚠️ Skipping malformed row in attendance.csv:", row)
+                    continue
+
                 reg_no = row['register_number']
                 time_val = row['Time']
                 date_only = time_val.split()[0]
@@ -399,12 +428,16 @@ def admin_attendance():
 
     total_working_days = len(total_days_set)
 
-    # Read student info + calculate attendance %
+    # Read students.csv + calculate attendance %
     student_data = []
     if os.path.exists(student_file):
         with open(student_file, newline='') as f:
             reader = csv.DictReader(f)
             for row in reader:
+                if not row or 'register_number' not in row:
+                    print("⚠️ Skipping malformed row in students.csv:", row)
+                    continue
+
                 reg = row['register_number']
                 count = attendance_count.get(reg, 0)
                 percentage = round((count / total_working_days) * 100, 2) if total_working_days else 0
@@ -416,7 +449,6 @@ def admin_attendance():
                            selected_date=selected_date,
                            students=student_data,
                            total_days=total_working_days)
-
 @app.route('/export_csv')
 def export_csv():
     from flask import send_file

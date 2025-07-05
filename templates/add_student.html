@@ -5,6 +5,7 @@
   <title>Add Student</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="{{ url_for('static', filename='add_student.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='logo.css') }}">
 </head>
 <body>
   <div class="branding"> <img src="{{ url_for('static', filename='KARE.png') }}" style="height: 30px; width: auto;">KARE-FAS</div>
@@ -32,6 +33,7 @@
 
     <a href="{{ url_for('admin_dashboard') }}" class="back-btn">← Back to Dashboard</a>
   </div>
+  {% include 'footer.html' %}
 
   <script>
     function toggleTheme() {

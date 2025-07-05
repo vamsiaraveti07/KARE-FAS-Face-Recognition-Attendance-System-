@@ -7,6 +7,7 @@
     href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap"
     rel="stylesheet"
   />
+  <link rel="stylesheet" href="{{ url_for('static', filename='logo.css') }}">
   <style>
     /* Reset and base */
     body {
@@ -174,12 +175,9 @@
   </style>
 </head>
 <body>
-  <!-- Style 2: Fixed Top Bar -->
-  <header class="fixed-top">KARE Face Recognition Attendance System</header>
 
-  <!-- Style 4: Logo + Text side by side -->
   <header class="branding">
-    <img src="kalasalingam__1_-removebg-preview.png" alt="KARE Face Recognition Attendance System Logo" width="250" />
+    <img src="{{ url_for('static', filename='KARE.png') }}" style="height: 40px; width: auto;">
 
     <div class="title">KARE Face Recognition Attendance System</div>
   </header>

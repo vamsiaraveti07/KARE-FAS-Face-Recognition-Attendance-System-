@@ -6,6 +6,7 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='students.css') }}">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='logo.css') }}">
   <style>
     :root {
       --bg: #fef6fb;
@@ -186,31 +187,36 @@
     {% for student in students %}
     <div class="card">
       <div class="card-content">
-        <h3>{{ student.name }}</h3>
-        <p><strong>Register No:</strong> {{ student.register_number }}</p>
-        <p><strong>Room No:</strong> {{ student.room }}</p>
-        <p><strong>Attendance:</strong> {{ student.attendance_percentage }}%</p>
-        <p><strong>Registered:</strong> {{ student.registered_on or 'N/A' }}</p>
+        <h3>{{ student['name'] }}</h3>
+        <p><strong>Register No:</strong> {{ student['register_number'] }}</p>
+        <p><strong>Room No:</strong> {{ student['room'] }}</p>
+        <p><strong>Attendance:</strong> {{ student['attendance_percentage'] }}%</p>
+        <p><strong>Registered:</strong> {{ student['registered_on'] or 'N/A' }}</p>
       </div>
-      <div class="card-1 {% if student.attendance_percentage|float < 75 %}low-attendance{% elif student.attendance_percentage|float >= 90 %}high-attendance{% else %}medium-attendance{% endif %}">
+  
+      <div class="card-1 {% if student['attendance_percentage']|float < 75 %}low-attendance{% elif student['attendance_percentage']|float >= 90 %}high-attendance{% else %}medium-attendance{% endif %}">
         <div class="legend">
           <span style="border-left: 6px solid var(--high); padding-left: 10px;">High ≥ 90%</span> |
           <span style="border-left: 6px solid var(--med); padding-left: 10px;">Medium 75-89%</span> |
           <span style="border-left: 6px solid var(--low); padding-left: 10px;">Low &lt; 75%</span>
         </div>
-
+  
         <form action="{{ url_for('delete_student') }}" method="POST" onsubmit="return confirm('Delete this student?');">
-          <input type="hidden" name="register_number" value="{{ student.register_number }}">
+          <input type="hidden" name="register_number" value="{{ student['register_number'] }}">
           <button class="delete-btn" type="submit"><i class="fa fa-trash"></i> Delete</button>
         </form>
       </div>
     </div>
+    {% else %}
+      <p>No students found.</p>
     {% endfor %}
   </div>
+  
 
   {% if not students %}
     <p class="no-data">No students registered yet.</p>
   {% endif %}
+  {% include 'footer.html' %}
 
   <script>
     function filterCards() {
