@@ -60,7 +60,7 @@ Uses face_register.py to capture student face data and encode it using face_reco
 face_attendance.py matches live webcam input with stored encodings to log attendance.
 
 #👨‍💻 Author
-##Vamsi Araveti
+## Vamsi Araveti
 
 💼 Final year B.Tech Student
 
